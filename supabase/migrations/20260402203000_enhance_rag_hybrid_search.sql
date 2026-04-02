@@ -26,7 +26,7 @@ create index if not exists rag_chunks_fts_idx
   on public.rag_chunks using gin (fts);
 
 create index if not exists rag_chunks_embedding_idx
-  on public.rag_chunks using ivfflat (embedding vector_cosine_ops)
+  on public.rag_chunks using ivfflat (embedding extensions.vector_cosine_ops)
   with (lists = 100)
   where embedding is not null;
 
@@ -55,6 +55,7 @@ returns table (
 )
 language sql
 stable
+set search_path = public, extensions, pg_catalog
 as $$
   with params as (
     select
