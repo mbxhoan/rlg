@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
-export type KnowledgeSourceTable = 'facebook_posts' | 'web_pages';
+export type KnowledgeSourceTable = 'facebook_posts' | 'website_pages';
 
 export type KnowledgeDocument = {
   source_table: KnowledgeSourceTable;
@@ -70,7 +70,7 @@ type RagDocumentRow = {
   source_updated_at: string | null;
 };
 
-const SOURCE_TABLES: KnowledgeSourceTable[] = ['facebook_posts', 'web_pages'];
+const SOURCE_TABLES: KnowledgeSourceTable[] = ['facebook_posts', 'website_pages'];
 const FACEBOOK_CHUNK_TARGET_WORDS = 280;
 const WEB_PAGE_CHUNK_TARGET_WORDS = 520;
 const CHUNK_OVERLAP_WORDS = 80;
@@ -90,7 +90,7 @@ export async function rebuildKnowledgeIndex() {
     chunks_inserted: 0,
     source_breakdown: {
       facebook_posts: { scanned: 0, upserted: 0, skipped: 0 },
-      web_pages: { scanned: 0, upserted: 0, skipped: 0 },
+      website_pages: { scanned: 0, upserted: 0, skipped: 0 },
     },
   };
 
@@ -331,7 +331,7 @@ async function loadFacebookPosts(): Promise<KnowledgeDocument[]> {
 }
 
 async function loadWebPages(): Promise<KnowledgeDocument[]> {
-  const rows = await fetchAllRows('web_pages', '*');
+  const rows = await fetchAllRows('website_pages', '*');
   return rows
     .map((row) => {
       const sourceId =
@@ -355,7 +355,7 @@ async function loadWebPages(): Promise<KnowledgeDocument[]> {
       const createdAt = nullableText(row, ['created_at', 'updated_at', 'published_at']);
 
       return makeDocument({
-        source_table: 'web_pages',
+        source_table: 'website_pages',
         source_id: sourceId,
         source_url: sourceUrl,
         title,

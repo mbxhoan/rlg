@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     .get('sources')
     ?.split(',')
     .map((item) => item.trim())
-    .filter(Boolean) as ('facebook_posts' | 'web_pages')[] | undefined;
+    .filter(Boolean) as ('facebook_posts' | 'website_pages')[] | undefined;
 
   if (!query) {
     return NextResponse.json({ error: 'Query is required.' }, { status: 400 });

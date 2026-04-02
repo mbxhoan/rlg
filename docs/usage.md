@@ -14,7 +14,7 @@ Tài liệu này là lối vào nhanh để bắt đầu dùng repo này để t
 1. Mở màn hình workspace.
 2. Chọn bài cũ để xem, sửa hoặc xoá.
 3. Dán nội dung bài mới vào form nếu cần tạo draft.
-4. Kiểm tra `Knowledge Assist` để lấy context liên quan từ `facebook_posts` và `web_pages`.
+4. Kiểm tra `Knowledge Assist` để lấy context liên quan từ `facebook_posts` và `website_pages`.
 5. Bấm `Lưu bài` để lưu vào `facebook_posts_workspace`; hệ thống sẽ refresh context một lần nữa ngay trước khi lưu.
 6. Khi bài đã đăng lên fanpage, bấm `Đã đăng hôm nay` và dán link bài.
 
@@ -29,7 +29,7 @@ Tài liệu này là lối vào nhanh để bắt đầu dùng repo này để t
 ## 4. Khi thêm dữ liệu mới
 
 1. Nếu là bài Facebook cũ, đồng bộ vào `facebook_posts`.
-2. Nếu là nội dung web, đồng bộ vào `web_pages`.
+2. Nếu là nội dung web, đồng bộ vào `website_pages`.
 3. Sau đó rebuild knowledge index để cập nhật `rag_documents` và `rag_chunks`.
 4. Kiểm tra lại một vài query mẫu trong `Knowledge Index`.
 

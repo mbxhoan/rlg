@@ -18,13 +18,13 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 | `docs/maintenance.md` | Quy trình giữ tài liệu luôn khớp với code và dữ liệu thật |
 | `Supabase.facebook_posts` | Kho dữ liệu bài viết Facebook cũ đã đồng bộ, dùng làm nguồn tham chiếu chính |
 | `Supabase.facebook_posts_workspace` | Bảng workspace để lưu, sửa, xoá và đánh dấu các bài viết mới |
-| `Supabase.web_pages` | Kho nội dung web đã được crawl và đồng bộ sẵn, dùng làm nguồn knowledge retrieval bổ sung |
-| `Supabase.rag_documents` / `Supabase.rag_chunks` | Lớp chunk/index phục vụ RAG, được rebuild từ `facebook_posts` + `web_pages` |
+| `Supabase.website_pages` | Kho nội dung web đã được crawl và đồng bộ sẵn, dùng làm nguồn knowledge retrieval bổ sung |
+| `Supabase.rag_documents` / `Supabase.rag_chunks` | Lớp chunk/index phục vụ RAG, được rebuild từ `facebook_posts` + `website_pages` |
 
 ## Cách sử dụng
 1. Đọc `data/basis.md` để nắm bối cảnh, thuật ngữ và các mảng nội dung ưu tiên.
 2. Lấy dữ liệu bài viết cũ từ bảng `facebook_posts` trên Supabase để học giọng văn, độ dài, cấu trúc và cách triển khai bài.
-3. Lấy nội dung web từ bảng `web_pages` trên Supabase để học thông điệp global, cấu trúc thông tin và thuật ngữ chuẩn.
+3. Lấy nội dung web từ bảng `website_pages` trên Supabase để học thông điệp global, cấu trúc thông tin và thuật ngữ chuẩn.
 4. Tham chiếu `AGENTS.md` trước khi viết nội dung mới để đảm bảo đúng quy tắc.
 5. Lấy chunk đã index từ `rag_documents` / `rag_chunks` khi cần RAG context cho AI.
 6. Khi tạo bài mới, ưu tiên:
@@ -42,10 +42,10 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 - Đánh dấu bài đã đăng kèm ngày đăng và link bài.
 - Bài viết mới lưu vào bảng `facebook_posts_workspace`, không ghi đè lên `facebook_posts`.
 - Khi lưu bài, hệ thống sẽ chặn nội dung trùng với dữ liệu đã đăng hoặc đã lưu trong workspace.
-- Kho nội dung web đã được crawler bên ngoài xử lý và đồng bộ vào bảng `web_pages` để agent học thêm thông điệp global, mô tả sản phẩm và thuật ngữ tiếng Anh chuẩn.
-- Nội dung từ `web_pages` là nguồn tham chiếu bổ sung, không thay thế bài Facebook cũ.
+- Kho nội dung web đã được crawler bên ngoài xử lý và đồng bộ vào bảng `website_pages` để agent học thêm thông điệp global, mô tả sản phẩm và thuật ngữ tiếng Anh chuẩn.
+- Nội dung từ `website_pages` là nguồn tham chiếu bổ sung, không thay thế bài Facebook cũ.
 - Repo này không còn tự triển khai crawl web; dữ liệu web được nạp sẵn qua Supabase.
-- Repo có panel `Knowledge Index` để rebuild chunks từ `facebook_posts` + `web_pages` và test retrieval.
+- Repo có panel `Knowledge Index` để rebuild chunks từ `facebook_posts` + `website_pages` và test retrieval.
 - Repo có endpoint `GET /api/knowledge/context` để tạo context pack top chunk cho AI dùng trực tiếp.
 - Panel `Knowledge Index` cho phép lọc nguồn, search chunk và copy context pack.
 - Màn hình soạn bài có `Knowledge Assist` để bám context theo title/content hiện tại và refresh context ngay trước khi lưu.
@@ -54,7 +54,7 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 - Index vector hiện dùng IVFFlat với opclass `extensions.vector_cosine_ops` để bảo đảm migration chạy ổn định trên Supabase; function hybrid search cũng set `search_path = public, extensions, pg_catalog` để Postgres nhận đúng operator vector.
 - Chunking mặc định trong index:
   - `facebook_posts`: khoảng 280 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên hook + body + CTA.
-  - `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên đoạn theo heading và paragraph.
+  - `website_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên đoạn theo heading và paragraph.
   - Bilingual separators và block liên hệ nên được giữ trọn trong cùng chunk nếu còn vừa ngưỡng.
 - Hướng dẫn bảo trì tài liệu nằm ở [docs/maintenance.md](docs/maintenance.md).
 

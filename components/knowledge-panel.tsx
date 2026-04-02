@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 type KnowledgeSearchResult = {
   document_id: string;
   chunk_id: string;
-  source_table: 'facebook_posts' | 'web_pages';
+  source_table: 'facebook_posts' | 'website_pages';
   source_id: string;
   source_url: string | null;
   title: string;
@@ -23,13 +23,13 @@ type RebuildSummary = {
   documents_skipped: number;
   chunks_deleted: number;
   chunks_inserted: number;
-  source_breakdown: Record<'facebook_posts' | 'web_pages', { scanned: number; upserted: number; skipped: number }>;
+  source_breakdown: Record<'facebook_posts' | 'website_pages', { scanned: number; upserted: number; skipped: number }>;
 };
 
 type KnowledgeContextPack = {
   query: string;
   limit: number;
-  source_tables: Array<'facebook_posts' | 'web_pages'>;
+  source_tables: Array<'facebook_posts' | 'website_pages'>;
   context_text: string;
   chunks: KnowledgeSearchResult[];
 };
@@ -145,7 +145,7 @@ export function KnowledgePanel() {
             Knowledge Index
           </h2>
           <p>
-            Rebuild chunk index từ <code>facebook_posts</code> và <code>web_pages</code>, rồi test retrieval trực tiếp.
+            Rebuild chunk index từ <code>facebook_posts</code> và <code>website_pages</code>, rồi test retrieval trực tiếp.
           </p>
         </div>
 
@@ -212,7 +212,7 @@ export function KnowledgePanel() {
                 checked={includeWebPages}
                 onChange={(event) => setIncludeWebPages(event.target.checked)}
               />
-              web_pages
+              website_pages
             </label>
           </div>
         </div>
@@ -230,7 +230,7 @@ export function KnowledgePanel() {
             <span className="badge">Chunks: {summary.chunks_inserted}</span>
           </div>
           <p className="footer-note" style={{ marginTop: 10 }}>
-            facebook_posts: {summary.source_breakdown.facebook_posts.upserted}/{summary.source_breakdown.facebook_posts.scanned} | web_pages: {summary.source_breakdown.web_pages.upserted}/{summary.source_breakdown.web_pages.scanned}
+            facebook_posts: {summary.source_breakdown.facebook_posts.upserted}/{summary.source_breakdown.facebook_posts.scanned} | website_pages: {summary.source_breakdown.website_pages.upserted}/{summary.source_breakdown.website_pages.scanned}
           </p>
         </div>
       ) : null}
@@ -294,10 +294,10 @@ export function KnowledgePanel() {
     </section>
   );
 
-  function getSelectedSources(): Array<'facebook_posts' | 'web_pages'> {
-    const sources: Array<'facebook_posts' | 'web_pages'> = [];
+  function getSelectedSources(): Array<'facebook_posts' | 'website_pages'> {
+    const sources: Array<'facebook_posts' | 'website_pages'> = [];
     if (includeFacebook) sources.push('facebook_posts');
-    if (includeWebPages) sources.push('web_pages');
+    if (includeWebPages) sources.push('website_pages');
     return sources;
   }
 }

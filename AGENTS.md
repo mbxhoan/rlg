@@ -6,13 +6,13 @@ Mọi nội dung đầu ra, ghi chú nội bộ, dữ liệu đầu vào cần g
 
 Nguồn ưu tiên để học giọng văn và nội dung lịch sử là bảng `facebook_posts` trên Supabase. Không mặc định đọc từ `data/posts` cho kho bài viết cũ nữa.
 
-Nguồn thứ hai để học hệ thống thương hiệu, sản phẩm, thị trường và thông điệp global là bảng `web_pages` trên Supabase, được nạp sẵn từ dữ liệu web RLG toàn cầu đã crawl bên ngoài repo.
-Repo này không tự crawl web nữa. Nếu dữ liệu web cần cập nhật, phải được đồng bộ vào `web_pages` ở phía Supabase hoặc pipeline bên ngoài.
+Nguồn thứ hai để học hệ thống thương hiệu, sản phẩm, thị trường và thông điệp global là bảng `website_pages` trên Supabase, được nạp sẵn từ dữ liệu web RLG toàn cầu đã crawl bên ngoài repo.
+Repo này không tự crawl web nữa. Nếu dữ liệu web cần cập nhật, phải được đồng bộ vào `website_pages` ở phía Supabase hoặc pipeline bên ngoài.
 
-Lớp RAG trong repo dùng bảng `rag_documents` và `rag_chunks` để chunk hóa lại `facebook_posts` + `web_pages` thành index phục vụ retrieval. Khi cần context cho AI, ưu tiên lấy từ chunk index thay vì nạp trực tiếp toàn bộ raw rows.
+Lớp RAG trong repo dùng bảng `rag_documents` và `rag_chunks` để chunk hóa lại `facebook_posts` + `website_pages` thành index phục vụ retrieval. Khi cần context cho AI, ưu tiên lấy từ chunk index thay vì nạp trực tiếp toàn bộ raw rows.
 Chunking mặc định:
 - `facebook_posts`: khoảng 280 từ/chunk, overlap khoảng 80 từ, giữ nguyên hook/body/CTA nếu có thể.
-- `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên cắt theo heading và paragraph.
+- `website_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên cắt theo heading và paragraph.
 - Không cắt rời dòng phân tách song ngữ hoặc block liên hệ nếu tránh được.
 Khi cần context ngắn để đưa vào prompt, dùng `GET /api/knowledge/context` hoặc `rag_chunks` thay vì tự nối raw content.
 Cron job Vercel có thể gọi `/api/knowledge/rebuild/cron` để tự rebuild index hằng ngày; route này chỉ nên dùng cho job nền hoặc kiểm tra thủ công từ hệ thống.
@@ -61,7 +61,7 @@ Khi nhận yêu cầu:
   - Học độ dài bài viết.
   - Học cấu trúc hook, body, CTA và hashtag.
   - Học cách dùng thuật ngữ Việt - Anh đã duyệt.
-- Dùng bảng `web_pages` để học:
+- Dùng bảng `website_pages` để học:
   - Thông điệp global của RLG.
   - Mô tả sản phẩm và giải pháp.
   - Cách diễn đạt thương hiệu chuẩn theo RLG toàn cầu.
@@ -78,7 +78,7 @@ Khi nhận yêu cầu:
   - Cuối bài có block liên hệ, website và hashtag.
   - `images` là danh sách ảnh đính kèm theo thứ tự.
 - Mọi bài viết mới phải được kiểm tra trùng nội dung với cả `facebook_posts` và bảng workspace trước khi lưu.
-- Nội dung học từ `web_pages` chỉ dùng để tăng chất lượng và độ chính xác, không được copy nguyên văn nếu chưa được duyệt.
+- Nội dung học từ `website_pages` chỉ dùng để tăng chất lượng và độ chính xác, không được copy nguyên văn nếu chưa được duyệt.
 
 ## 4. Mục tiêu nội dung
 
@@ -168,7 +168,7 @@ Khi nhận yêu cầu:
 
 - Học từ các bài có sẵn trong thư mục `data/` trước khi viết bài mới.
 - Khi có truy cập Supabase, ưu tiên học từ bảng `facebook_posts` thay vì nguồn file tĩnh.
-- Khi cần giọng văn global hoặc thông điệp thương hiệu quốc tế, học thêm từ `web_pages`.
+- Khi cần giọng văn global hoặc thông điệp thương hiệu quốc tế, học thêm từ `website_pages`.
 - Khi cần context ngắn và sát prompt, học thêm từ `rag_chunks`.
 - Khi cần prompt pack trực tiếp, học thêm từ `GET /api/knowledge/context`.
 - Khi cần context ngay trong workflow soạn bài, dùng `Knowledge Assist` trong `PostWorkspace`.

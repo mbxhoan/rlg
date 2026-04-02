@@ -11,7 +11,7 @@ type PostsResponse = {
 type KnowledgeSearchResult = {
   document_id: string;
   chunk_id: string;
-  source_table: 'facebook_posts' | 'web_pages';
+  source_table: 'facebook_posts' | 'website_pages';
   source_id: string;
   source_url: string | null;
   title: string;
@@ -26,7 +26,7 @@ type KnowledgeSearchResult = {
 type KnowledgeContextPack = {
   query: string;
   limit: number;
-  source_tables: Array<'facebook_posts' | 'web_pages'>;
+  source_tables: Array<'facebook_posts' | 'website_pages'>;
   context_text: string;
   chunks: KnowledgeSearchResult[];
 };
@@ -368,7 +368,7 @@ export function PostWorkspace() {
       const params = new URLSearchParams();
       params.set('q', queryText);
       params.set('limit', '3');
-      params.set('sources', 'facebook_posts,web_pages');
+      params.set('sources', 'facebook_posts,website_pages');
 
       const response = await fetch(`/api/knowledge/context?${params.toString()}`);
       if (!response.ok) {
@@ -596,7 +596,7 @@ export function PostWorkspace() {
                       Knowledge Assist
                     </h3>
                     <p>
-                      Tự lấy context từ <code>facebook_posts</code> + <code>web_pages</code> theo title/content đang soạn.
+                      Tự lấy context từ <code>facebook_posts</code> + <code>website_pages</code> theo title/content đang soạn.
                     </p>
                   </div>
 
