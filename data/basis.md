@@ -4,6 +4,8 @@ Tài liệu này dùng làm “single source of truth” khi viết nội dung v
 
 Tất cả nội dung ghi nhớ, dữ liệu đầu vào, thuật ngữ học được và nội dung đầu ra đều phải được xử lý theo hướng song ngữ Việt - Anh, với ưu tiên cao nhất là tính chính xác của thuật ngữ chuyên ngành ở cả hai ngôn ngữ.
 
+Kho bài viết Facebook cũ được đồng bộ lên Supabase và là nguồn tham chiếu chính trong bảng `facebook_posts`. Không còn mặc định đọc từ `data/posts` cho nội dung lịch sử.
+
 ## 1. RLG Việt Nam là ai?
 
 - Reverse Logistics Group Vietnam (RLG Việt Nam) là đơn vị hoạt động trong lĩnh vực thu gom, tái chế và quản lý trách nhiệm tái chế (EPR) tại Việt Nam.
@@ -98,6 +100,7 @@ Tất cả nội dung ghi nhớ, dữ liệu đầu vào, thuật ngữ học đ
 - Nếu chưa đủ dữ liệu, hãy ghi rõ phần cần xác minh thay vì suy đoán.
 - Ưu tiên nguồn:
   - Văn bản pháp luật.
+  - Bảng `facebook_posts` trên Supabase cho dữ liệu bài viết cũ và giọng văn đã duyệt.
   - Website hoặc tài liệu chính thức của RLG.
   - Thông cáo, bài đăng hoặc nội dung đã duyệt của thương hiệu.
   - Nguồn báo chí hoặc tài liệu chuyên ngành có độ tin cậy cao.

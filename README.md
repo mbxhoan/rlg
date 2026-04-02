@@ -14,12 +14,12 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 | --- | --- |
 | `AGENTS.md` | Quy tắc vận hành cho trợ lý nội dung và cách phản hồi trong dự án |
 | `data/basis.md` | Tài liệu nền về RLG Việt Nam, mô hình hoạt động và các chủ đề cốt lõi |
-| `data/posts` | Thư mục chứa kho nội dung bài viết mẫu, draft, hoặc bài đã đăng để tham chiếu |
+| `Supabase.facebook_posts` | Kho dữ liệu bài viết Facebook cũ đã đồng bộ, dùng làm nguồn tham chiếu chính |
 
 ## Cách sử dụng
 
 1. Đọc `data/basis.md` để nắm bối cảnh, thuật ngữ và các mảng nội dung ưu tiên.
-2. Vào `data/posts` để học giọng văn, độ dài, cấu trúc và cách triển khai bài.
+2. Lấy dữ liệu bài viết cũ từ bảng `facebook_posts` trên Supabase để học giọng văn, độ dài, cấu trúc và cách triển khai bài.
 3. Tham chiếu `AGENTS.md` trước khi viết nội dung mới để đảm bảo đúng quy tắc.
 4. Khi tạo bài mới, ưu tiên:
    - Giá trị giáo dục trước, bán hàng sau.
