@@ -15,7 +15,7 @@ Tài liệu này là lối vào nhanh để bắt đầu dùng repo này để t
 2. Chọn bài cũ để xem, sửa hoặc xoá.
 3. Dán nội dung bài mới vào form nếu cần tạo draft.
 4. Kiểm tra `Knowledge Assist` để lấy context liên quan từ `facebook_posts` và `web_pages`.
-5. Bấm `Lưu bài` để lưu vào `facebook_posts_workspace`.
+5. Bấm `Lưu bài` để lưu vào `facebook_posts_workspace`; hệ thống sẽ refresh context một lần nữa ngay trước khi lưu.
 6. Khi bài đã đăng lên fanpage, bấm `Đã đăng hôm nay` và dán link bài.
 
 ## 3. Khi cần tạo nội dung mới
@@ -38,7 +38,8 @@ Tài liệu này là lối vào nhanh để bắt đầu dùng repo này để t
 1. Nếu thay đổi UI, cập nhật README và file này.
 2. Nếu thay đổi quy tắc viết, cập nhật AGENTS.md và data/basis.md.
 3. Nếu thêm/sửa route, schema hoặc pipeline dữ liệu, cập nhật README, AGENTS.md và docs/maintenance.md.
-4. Ghi lại thay đổi trong `docs/commit_prompt_map.md`.
+4. Nếu thay đổi env var hoặc model dùng cho embeddings, cập nhật `.env.example` và README.
+5. Ghi lại thay đổi trong `docs/commit_prompt_map.md`.
 
 ## 6. Mốc kiểm tra nhanh
 

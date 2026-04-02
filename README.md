@@ -48,8 +48,9 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 - Repo có panel `Knowledge Index` để rebuild chunks từ `facebook_posts` + `web_pages` và test retrieval.
 - Repo có endpoint `GET /api/knowledge/context` để tạo context pack top chunk cho AI dùng trực tiếp.
 - Panel `Knowledge Index` cho phép lọc nguồn, search chunk và copy context pack.
-- Màn hình soạn bài có `Knowledge Assist` để bám context theo title/content hiện tại.
+- Màn hình soạn bài có `Knowledge Assist` để bám context theo title/content hiện tại và refresh context ngay trước khi lưu.
 - Có cron job Vercel để rebuild index tự động theo lịch hằng ngày.
+- Nếu có `OPENAI_API_KEY`, hệ thống tạo embeddings thật cho `rag_chunks` và dùng hybrid search giữa full-text + vector; nếu không có key thì tự fallback về keyword search.
 - Chunking mặc định trong index:
   - `facebook_posts`: khoảng 280 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên hook + body + CTA.
   - `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên đoạn theo heading và paragraph.
@@ -62,6 +63,8 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `APP_ACCESS_PASSWORD`
 - `APP_SESSION_SECRET`
+- `OPENAI_API_KEY` để bật embeddings thật cho RAG/hybrid retrieval
+- `OPENAI_EMBEDDING_MODEL` để đổi model embedding nếu cần
 - `KNOWLEDGE_REBUILD_CRON` không bắt buộc; cron job dùng header `x-vercel-cron` khi chạy trên Vercel.
 
 ## Định hướng nội dung

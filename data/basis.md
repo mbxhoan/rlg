@@ -6,6 +6,8 @@ Tất cả nội dung ghi nhớ, dữ liệu đầu vào, thuật ngữ học đ
 
 Kho bài viết Facebook cũ được đồng bộ lên Supabase và là nguồn tham chiếu chính trong bảng `facebook_posts`. Nội dung mới, bản nháp, bản chỉnh sửa và trạng thái đã đăng phải đi qua bảng `facebook_posts_workspace`. Nội dung web toàn cầu đã crawl sẵn được lưu trong bảng `web_pages` trên Supabase và là nguồn học bổ sung cho thông điệp, sản phẩm và thuật ngữ tiếng Anh chuẩn. Lớp RAG của repo rebuild chunk từ `facebook_posts` + `web_pages` vào `rag_documents` và `rag_chunks`. Repo này không tự crawl web nữa. Không còn mặc định đọc từ `data/posts` cho nội dung lịch sử.
 
+Khi có `OPENAI_API_KEY`, hệ thống tạo embeddings thật cho `rag_chunks` và dùng hybrid search giữa full-text + vector. Nếu không có key, hệ thống tự fallback về keyword search nhưng vẫn giữ được luồng RAG cơ bản.
+
 Từ dữ liệu thật đã đọc được, cấu trúc bài viết đang dùng trong `facebook_posts` thường có:
 
 - Phần tiếng Việt trước, phần tiếng Anh sau.
@@ -129,6 +131,7 @@ Chiến lược chunking cho RAG:
 - Nếu có thể, không tách rời separator song ngữ, CTA hoặc block liên hệ khỏi chunk gốc.
 - Khi cần prompt pack ngắn cho AI, dùng context pack top 3 chunk từ `rag_chunks` thay vì nạp toàn bộ tài liệu.
 - Khi soạn bài mới, tận dụng `Knowledge Assist` để so sánh nội dung hiện tại với nguồn lịch sử và web knowledge.
+- Trước khi lưu bài workspace, refresh context thêm một lần để gợi ý bám sát dữ liệu mới nhất.
 - Khi thay đổi quy trình hoặc nguồn nội dung, cập nhật thêm `docs/usage.md` và `docs/maintenance.md`.
 - Thông cáo, bài đăng hoặc nội dung đã duyệt của thương hiệu.
 - Nguồn báo chí hoặc tài liệu chuyên ngành có độ tin cậy cao.

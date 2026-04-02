@@ -69,6 +69,8 @@ Khi nhận yêu cầu:
 - Dùng bảng `rag_chunks` để lấy context đã chunk hóa cho retrieval khi generate bài hoặc phân loại nội dung.
 - Dùng endpoint `context` để tạo prompt pack top 3 chunk cho AI.
 - Dùng knowledge assist trong editor để rà lại context ngay khi soạn bài.
+- Nếu có `OPENAI_API_KEY`, ưu tiên embeddings thật và hybrid search; nếu không có key thì fallback keyword search vẫn được phép.
+- Trước khi lưu bài trong workspace, refresh context một lần nữa để gợi ý luôn bám sát dữ liệu mới nhất.
 - Nếu MCP hoặc Supabase không truy cập được, báo rõ tình trạng thay vì tự suy đoán hoặc quay lại dùng `data/posts` như nguồn mặc định.
 - Mẫu format quan sát được từ dữ liệu thật:
   - Tiếng Việt trước, tiếng Anh sau.

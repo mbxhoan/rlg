@@ -9,6 +9,7 @@ Tài liệu này mô tả cách giữ tài liệu của repo luôn khớp với 
 - Mọi thay đổi về nền tảng kiến thức, format bài và thuật ngữ phải cập nhật `data/basis.md`.
 - Mọi thay đổi về luồng sử dụng nội bộ phải cập nhật `docs/usage.md`.
 - Mọi thay đổi đáng kể phải được ghi trong `docs/commit_prompt_map.md`.
+- Mọi thay đổi về biến môi trường, model embedding hoặc cấu hình hybrid search phải cập nhật `.env.example` và README.
 
 ## Khi nào phải cập nhật tài liệu
 

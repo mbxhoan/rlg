@@ -75,6 +75,10 @@ const FACEBOOK_CHUNK_TARGET_WORDS = 280;
 const WEB_PAGE_CHUNK_TARGET_WORDS = 520;
 const CHUNK_OVERLAP_WORDS = 80;
 const BATCH_SIZE = 500;
+const EMBEDDING_MODEL = process.env.OPENAI_EMBEDDING_MODEL ?? 'text-embedding-3-small';
+const EMBEDDING_API_URL = 'https://api.openai.com/v1/embeddings';
+const EMBEDDING_BATCH_SIZE = 32;
+const EMBEDDING_DIMENSIONS = 1536;
 
 export async function rebuildKnowledgeIndex() {
   const existingDocuments = await loadExistingDocuments();
@@ -143,8 +147,12 @@ export async function rebuildKnowledgeIndex() {
 
       const chunks = chunkDocument(document);
       if (chunks.length > 0) {
+        const embeddings = await generateChunkEmbeddings(
+          chunks.map((chunk) => makeEmbeddingInputText(document, chunk.chunk_text))
+        );
+
         const { error: insertError } = await supabaseAdmin.from('rag_chunks').insert(
-          chunks.map((chunk) => ({
+          chunks.map((chunk, index) => ({
             document_id: saved.id,
             chunk_index: chunk.chunk_index,
             chunk_text: chunk.chunk_text,
@@ -152,6 +160,9 @@ export async function rebuildKnowledgeIndex() {
             token_count: chunk.token_count,
             metadata: chunk.metadata,
             active: true,
+            embedding: embeddings?.[index] ?? null,
+            embedding_model: embeddings?.[index] ? EMBEDDING_MODEL : null,
+            embedded_at: embeddings?.[index] ? new Date().toISOString() : null,
           }))
         );
 
@@ -176,6 +187,26 @@ export async function searchKnowledgeChunks(params: {
   sourceTables?: KnowledgeSourceTable[];
 }): Promise<KnowledgeSearchResult[]> {
   const limit = Math.max(1, Math.min(params.limit ?? 8, 20));
+  const queryEmbedding = await generateEmbedding(params.query);
+
+  if (queryEmbedding) {
+    const hybrid = await supabaseAdmin.rpc('search_rag_chunks_hybrid', {
+      query_text: params.query,
+      query_embedding: JSON.stringify(queryEmbedding),
+      result_limit: limit,
+      source_tables: params.sourceTables?.length ? params.sourceTables : null,
+      full_text_weight: 1,
+      semantic_weight: 1.2,
+      rrf_k: 50,
+    });
+
+    if (!hybrid.error) {
+      return (hybrid.data ?? []) as KnowledgeSearchResult[];
+    }
+
+    console.warn(`Hybrid knowledge search failed, falling back to keyword search: ${hybrid.error.message}`);
+  }
+
   const { data, error } = await supabaseAdmin.rpc('search_rag_chunks', {
     query_text: params.query,
     result_limit: limit,
@@ -378,6 +409,62 @@ function makeDocument(input: KnowledgeDocumentInput): KnowledgeDocument {
       ].join('\n')
     ),
   };
+}
+
+function makeEmbeddingInputText(document: KnowledgeDocument, chunkText: string) {
+  return [document.title, document.content_type, document.locale, chunkText].filter(Boolean).join('\n\n');
+}
+
+async function generateEmbedding(text: string): Promise<number[] | null> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+
+  const embeddings = await generateChunkEmbeddings([text]);
+  return embeddings?.[0] ?? null;
+}
+
+async function generateChunkEmbeddings(texts: string[]): Promise<number[][] | null> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey || texts.length === 0) {
+    return null;
+  }
+
+  const results: number[][] = [];
+
+  for (let index = 0; index < texts.length; index += EMBEDDING_BATCH_SIZE) {
+    const batch = texts.slice(index, index + EMBEDDING_BATCH_SIZE);
+    const response = await fetch(EMBEDDING_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: EMBEDDING_MODEL,
+        input: batch,
+        dimensions: EMBEDDING_DIMENSIONS,
+      }),
+    });
+
+    if (!response.ok) {
+      const payload = (await response.json().catch(() => null)) as { error?: { message?: string } } | null;
+      throw new Error(payload?.error?.message ?? 'Không thể tạo embeddings.');
+    }
+
+    const payload = (await response.json()) as {
+      data?: { embedding: number[]; index: number }[];
+    };
+
+    const batchEmbeddings = (payload.data ?? [])
+      .sort((left, right) => left.index - right.index)
+      .map((item) => item.embedding);
+
+    results.push(...batchEmbeddings);
+  }
+
+  return results;
 }
 
 function chunkDocument(document: KnowledgeDocument): KnowledgeChunk[] {

@@ -176,11 +176,12 @@ export function PostWorkspace() {
   }
 
   async function savePost() {
-    setSaving(true);
     setMessage(null);
     setError(null);
 
     try {
+      await refreshKnowledgeContextBeforeSave();
+      setSaving(true);
       const payload = {
         ...form,
         title: form.title.trim() || firstLine(form.content),
@@ -274,11 +275,12 @@ export function PostWorkspace() {
       return;
     }
 
-    setSaving(true);
     setMessage(null);
     setError(null);
 
     try {
+      await refreshKnowledgeContextBeforeSave();
+      setSaving(true);
       const publishedOn =
         overrides.published_on === ''
           ? null
@@ -383,6 +385,15 @@ export function PostWorkspace() {
     }
   }
 
+  async function refreshKnowledgeContextBeforeSave() {
+    const queryText = knowledgeQueryFromForm();
+    if (queryText.length < 12) {
+      return;
+    }
+
+    await loadKnowledgeContext(queryText);
+  }
+
   return (
     <div className="page-shell">
       <div className="container">
@@ -465,6 +476,9 @@ export function PostWorkspace() {
                 <p>
                   Dán nội dung agent vào đây, sửa nếu cần, rồi lưu vào bảng workspace riêng. Sau khi đăng fanpage,
                   hãy đánh dấu ngày đăng để theo dõi.
+                </p>
+                <p style={{ marginTop: 8 }}>
+                  Context sẽ được refresh tự động ngay trước khi lưu để giữ gợi ý kiến thức mới nhất.
                 </p>
               </div>
 
