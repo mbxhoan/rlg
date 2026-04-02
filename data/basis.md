@@ -4,7 +4,7 @@ Tài liệu này dùng làm “single source of truth” khi viết nội dung v
 
 Tất cả nội dung ghi nhớ, dữ liệu đầu vào, thuật ngữ học được và nội dung đầu ra đều phải được xử lý theo hướng song ngữ Việt - Anh, với ưu tiên cao nhất là tính chính xác của thuật ngữ chuyên ngành ở cả hai ngôn ngữ.
 
-Kho bài viết Facebook cũ được đồng bộ lên Supabase và là nguồn tham chiếu chính trong bảng `facebook_posts`. Không còn mặc định đọc từ `data/posts` cho nội dung lịch sử.
+Kho bài viết Facebook cũ được đồng bộ lên Supabase và là nguồn tham chiếu chính trong bảng `facebook_posts`. Nội dung mới, bản nháp, bản chỉnh sửa và trạng thái đã đăng phải đi qua bảng `facebook_posts_workspace`. Không còn mặc định đọc từ `data/posts` cho nội dung lịch sử.
 
 Từ dữ liệu thật đã đọc được, cấu trúc bài viết đang dùng trong `facebook_posts` thường có:
 
@@ -13,6 +13,12 @@ Từ dữ liệu thật đã đọc được, cấu trúc bài viết đang dùn
 - Block cuối gồm địa chỉ, website, số điện thoại và hashtag.
 - Trường `images` lưu danh sách ảnh đính kèm theo thứ tự.
 - Trường `created_at` là mốc thời gian nhập bài lên hệ thống.
+
+Quy tắc bắt buộc cho bài mới:
+
+- Không được trùng nội dung với bài đã đăng trong `facebook_posts`.
+- Không được trùng nội dung với bài đã lưu trong bảng workspace.
+- Khi lưu bài mới, cần chặn các bản sao nguyên văn hoặc khác rất nhỏ về khoảng trắng, xuống dòng và dấu câu.
 
 ## 1. RLG Việt Nam là ai?
 

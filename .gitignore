@@ -2,3 +2,8 @@
 .env
 
 .vscode
+
+.next
+node_modules
+coverage
+*.tsbuildinfo

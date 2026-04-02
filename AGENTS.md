@@ -6,6 +6,17 @@ Mọi nội dung đầu ra, ghi chú nội bộ, dữ liệu đầu vào cần g
 
 Nguồn ưu tiên để học giọng văn và nội dung lịch sử là bảng `facebook_posts` trên Supabase. Không mặc định đọc từ `data/posts` cho kho bài viết cũ nữa.
 
+## 0. Working Protocol (Cách agent làm việc)
+Khi nhận yêu cầu:
+1) Tóm tắt mục tiêu + phạm vi (DB / UI / contract)
+2) Liệt kê rủi ro: chậm, dữ liệu trùng lặp, sai chính tả, sai ngữ pháp, sai lệch luật, sai lệch thông tin, lỗi hệ thống, bugs
+3) Đề xuất plan 3+ bước + file dự kiến chỉnh
+4) (optional) Thực hiện:
+   - DB: migration → RLS/policy → RPC → seed/test
+   - UI: server/client boundary → data fetching → UX loading/error
+5) (optional) Kết thúc: checklist verify + test cases (happy/edge/concurrent)
+6) Liệt kê & Giải thích những gì developer cần triển khai để xem những thay đổi mới mà agent đã làm
+
 ## 1. Vai trò
 
 - Hỗ trợ nghiên cứu, hệ thống hóa và viết nội dung marketing cho Facebook.
@@ -44,6 +55,7 @@ Nguồn ưu tiên để học giọng văn và nội dung lịch sử là bảng
   - Có dòng phân tách giữa hai ngôn ngữ.
   - Cuối bài có block liên hệ, website và hashtag.
   - `images` là danh sách ảnh đính kèm theo thứ tự.
+- Mọi bài viết mới phải được kiểm tra trùng nội dung với cả `facebook_posts` và bảng workspace trước khi lưu.
 
 ## 4. Mục tiêu nội dung
 
@@ -65,6 +77,7 @@ Nguồn ưu tiên để học giọng văn và nội dung lịch sử là bảng
 - Khi đề cập đến luật, nghị định hoặc trách nhiệm pháp lý, phải trích nguồn rõ ràng và đối chiếu văn bản hiện hành.
 - Nếu sử dụng số liệu, phải có nguồn cụ thể hoặc ghi chú cần kiểm chứng.
 - Không trả lời ngoài phạm vi hiểu biết; nếu cần, nêu rõ là chưa đủ dữ liệu để kết luận.
+- Không tạo bài viết mới có nội dung trùng với bài đã đăng hoặc bài đã lưu trong workspace.
 
 ## 6. Định dạng bài đăng Facebook
 
@@ -135,3 +148,18 @@ Nguồn ưu tiên để học giọng văn và nội dung lịch sử là bảng
 - Giữ giọng văn thống nhất giữa các bài.
 - Khi có nhiều cách diễn đạt, chọn cách dễ hiểu và phù hợp với doanh nghiệp hơn là cách quá học thuật.
 - Khi cần, đề xuất cấu trúc bài, dàn ý, hook, CTA và hashtag rõ ràng để tiết kiệm thời gian chỉnh sửa.
+
+## 13. Commit Discipline (bắt buộc cho Codex)
+- Khi hoàn tất mỗi task, agent phải đề xuất **đúng 1 commit message duy nhất** theo phạm vi thay đổi.
+- Commit message phải theo cấu trúc:
+  - `<entry_id>-<type>(<scope>): <summary>`
+  - Ví dụ: `fix(users-audit): stabilize created_by/updated_by for service-role flows`
+- Đồng thời phải lưu mapping giữa prompt và commit message vào file:
+  - `/docs/commit_prompt_map.md`
+- Nếu không có thay đổi file mà chỉ generate nội dung thì lưu lại câu trả lời từ agent thành file `<entry_id.md` lưu vào trong thư mục /docs/responses:
+  - `docs/responses/0001.md`
+- Mỗi entry mapping cần có:
+  - thời gian
+  - tóm tắt prompt/user request
+  - commit message duy nhất
+  - danh sách file chính đã sửa

@@ -15,6 +15,7 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 | `AGENTS.md` | Quy tắc vận hành cho trợ lý nội dung và cách phản hồi trong dự án |
 | `data/basis.md` | Tài liệu nền về RLG Việt Nam, mô hình hoạt động và các chủ đề cốt lõi |
 | `Supabase.facebook_posts` | Kho dữ liệu bài viết Facebook cũ đã đồng bộ, dùng làm nguồn tham chiếu chính |
+| `Supabase.facebook_posts_workspace` | Bảng workspace để lưu, sửa, xoá và đánh dấu các bài viết mới |
 
 ## Cách sử dụng
 
@@ -25,6 +26,23 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
    - Giá trị giáo dục trước, bán hàng sau.
    - Câu chữ rõ ràng, dễ hiểu cho doanh nghiệp.
    - Có nguồn, trích dẫn và hashtag phù hợp.
+
+## Ứng dụng nội bộ
+
+- Ứng dụng Next.js đơn giản đã được dựng để:
+  - Đăng nhập bằng mật khẩu nội bộ.
+  - Xem danh sách bài viết.
+  - Sửa, xoá và tạo mới bài viết.
+  - Đánh dấu bài đã đăng kèm ngày đăng và link bài.
+- Bài viết mới lưu vào bảng `facebook_posts_workspace`, không ghi đè lên `facebook_posts`.
+- Khi lưu bài, hệ thống sẽ chặn nội dung trùng với dữ liệu đã đăng hoặc đã lưu trong workspace.
+
+## Biến môi trường cần có
+
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `APP_ACCESS_PASSWORD`
+- `APP_SESSION_SECRET`
 
 ## Định hướng nội dung
 
@@ -55,6 +73,12 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 | `post_url` | Đường dẫn bài đăng; nhiều bản ghi đang để trống |
 | `images` | Danh sách ảnh đính kèm theo thứ tự |
 | `created_at` | Thời điểm bài được nhập lên hệ thống |
+
+## Quy tắc chống trùng
+
+- Bài mới không được trùng nội dung với bài đã có trong `facebook_posts`.
+- Bài mới cũng không được trùng nội dung với dữ liệu đã lưu trong bảng workspace.
+- Khi save, hệ thống nên chặn các trường hợp trùng nguyên văn hoặc chỉ khác whitespace/formatting.
 
 ## Nguyên tắc chất lượng
 
