@@ -16,6 +16,7 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 | `data/basis.md` | Tài liệu nền về RLG Việt Nam, mô hình hoạt động và các chủ đề cốt lõi |
 | `Supabase.facebook_posts` | Kho dữ liệu bài viết Facebook cũ đã đồng bộ, dùng làm nguồn tham chiếu chính |
 | `Supabase.facebook_posts_workspace` | Bảng workspace để lưu, sửa, xoá và đánh dấu các bài viết mới |
+| `Supabase.rlg_global_pages` | Kho nội dung toàn cầu từ `rev-log.com` để agent học thêm thông điệp thương hiệu và sản phẩm |
 
 ## Cách sử dụng
 
@@ -36,6 +37,8 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
   - Đánh dấu bài đã đăng kèm ngày đăng và link bài.
 - Bài viết mới lưu vào bảng `facebook_posts_workspace`, không ghi đè lên `facebook_posts`.
 - Khi lưu bài, hệ thống sẽ chặn nội dung trùng với dữ liệu đã đăng hoặc đã lưu trong workspace.
+- Kho nội dung toàn cầu từ `rev-log.com` được import vào bảng `rlg_global_pages` để agent học thêm thông điệp global, mô tả sản phẩm và thuật ngữ tiếng Anh chuẩn.
+- Nội dung từ `rlg_global_pages` là nguồn tham chiếu bổ sung, không thay thế bài Facebook cũ.
 
 ## Biến môi trường cần có
 

@@ -6,6 +6,8 @@ Mọi nội dung đầu ra, ghi chú nội bộ, dữ liệu đầu vào cần g
 
 Nguồn ưu tiên để học giọng văn và nội dung lịch sử là bảng `facebook_posts` trên Supabase. Không mặc định đọc từ `data/posts` cho kho bài viết cũ nữa.
 
+Nguồn thứ hai để học hệ thống thương hiệu, sản phẩm, thị trường và thông điệp global là bảng `rlg_global_pages` trên Supabase, được import từ web RLG toàn cầu `rev-log.com`.
+
 ## 0. Working Protocol (Cách agent làm việc)
 Khi nhận yêu cầu:
 1) Tóm tắt mục tiêu + phạm vi (DB / UI / contract)
@@ -49,6 +51,11 @@ Khi nhận yêu cầu:
   - Học độ dài bài viết.
   - Học cấu trúc hook, body, CTA và hashtag.
   - Học cách dùng thuật ngữ Việt - Anh đã duyệt.
+- Dùng bảng `rlg_global_pages` để học:
+  - Thông điệp global của RLG.
+  - Mô tả sản phẩm và giải pháp.
+  - Cách diễn đạt thương hiệu chuẩn theo RLG toàn cầu.
+  - Từ khóa tiếng Anh chuyên ngành đã dùng chính thức trên web global.
 - Nếu MCP hoặc Supabase không truy cập được, báo rõ tình trạng thay vì tự suy đoán hoặc quay lại dùng `data/posts` như nguồn mặc định.
 - Mẫu format quan sát được từ dữ liệu thật:
   - Tiếng Việt trước, tiếng Anh sau.
@@ -56,6 +63,7 @@ Khi nhận yêu cầu:
   - Cuối bài có block liên hệ, website và hashtag.
   - `images` là danh sách ảnh đính kèm theo thứ tự.
 - Mọi bài viết mới phải được kiểm tra trùng nội dung với cả `facebook_posts` và bảng workspace trước khi lưu.
+- Nội dung học từ `rlg_global_pages` chỉ dùng để tăng chất lượng và độ chính xác, không được copy nguyên văn nếu chưa được duyệt.
 
 ## 4. Mục tiêu nội dung
 
@@ -145,6 +153,7 @@ Khi nhận yêu cầu:
 
 - Học từ các bài có sẵn trong thư mục `data/` trước khi viết bài mới.
 - Khi có truy cập Supabase, ưu tiên học từ bảng `facebook_posts` thay vì nguồn file tĩnh.
+- Khi cần giọng văn global hoặc thông điệp thương hiệu quốc tế, học thêm từ `rlg_global_pages`.
 - Giữ giọng văn thống nhất giữa các bài.
 - Khi có nhiều cách diễn đạt, chọn cách dễ hiểu và phù hợp với doanh nghiệp hơn là cách quá học thuật.
 - Khi cần, đề xuất cấu trúc bài, dàn ý, hook, CTA và hashtag rõ ràng để tiết kiệm thời gian chỉnh sửa.
