@@ -2,6 +2,8 @@
 
 Tài liệu này dùng làm “single source of truth” khi viết nội dung về Reverse Logistics Group Vietnam (RLG Việt Nam), EPR, PRO, thu gom - tái chế và truyền thông môi trường.
 
+Tất cả nội dung ghi nhớ, dữ liệu đầu vào, thuật ngữ học được và nội dung đầu ra đều phải được xử lý theo hướng song ngữ Việt - Anh, với ưu tiên cao nhất là tính chính xác của thuật ngữ chuyên ngành ở cả hai ngôn ngữ.
+
 ## 1. RLG Việt Nam là ai?
 
 - Reverse Logistics Group Vietnam (RLG Việt Nam) là đơn vị hoạt động trong lĩnh vực thu gom, tái chế và quản lý trách nhiệm tái chế (EPR) tại Việt Nam.
@@ -77,7 +79,19 @@ Tài liệu này dùng làm “single source of truth” khi viết nội dung v
 - kinh tế tuần hoàn
 - tuân thủ pháp luật môi trường
 
-## 7. Quy tắc kiểm chứng khi viết bài
+## 7. Quy tắc song ngữ và thuật ngữ
+
+- Khi học dữ liệu mới, nên lưu cả cách diễn đạt tiếng Việt và tiếng Anh nếu có thể.
+- Khi viết bài, cần giữ bản dịch Việt - Anh tương ứng về ý, không dịch máy móc theo từng từ nếu làm sai ngữ nghĩa chuyên ngành.
+- Các thuật ngữ phải chính xác và nhất quán, ví dụ:
+  - EPR = Extended Producer Responsibility.
+  - PRO = Producer Responsibility Organization.
+  - reverse logistics = logistics ngược.
+  - recycling = tái chế.
+  - waste management = quản lý chất thải.
+- Nếu chưa chắc chắn về một thuật ngữ tiếng Anh chuyên ngành, cần kiểm chứng trước khi đưa vào nội dung chính thức.
+
+## 8. Quy tắc kiểm chứng khi viết bài
 
 - Không khẳng định số liệu, thị phần, dự án hoặc đối tác nếu chưa có nguồn chính thức.
 - Khi nhắc đến luật, nghị định hoặc nghĩa vụ pháp lý, cần đối chiếu văn bản hiện hành trước khi đăng.
@@ -88,7 +102,7 @@ Tài liệu này dùng làm “single source of truth” khi viết nội dung v
   - Thông cáo, bài đăng hoặc nội dung đã duyệt của thương hiệu.
   - Nguồn báo chí hoặc tài liệu chuyên ngành có độ tin cậy cao.
 
-## 8. Gợi ý thông điệp cho các nhóm nội dung
+## 9. Gợi ý thông điệp cho các nhóm nội dung
 
 - Kiến thức nền: giải thích EPR, PRO, thu gom, tái chế.
 - Giá trị xã hội: tác hại của rác thải, rác thải điện tử, ô nhiễm và vòng đời sản phẩm.

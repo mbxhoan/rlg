@@ -31,6 +31,7 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 - Chủ đề chính: RLG, recycle, logistics, EPR, PRO, trách nhiệm tái chế, rác thải điện tử, chất thải công nghiệp, kinh tế tuần hoàn.
 - Mục tiêu truyền thông: tăng nhận biết, xây dựng uy tín, nuôi dưỡng nhu cầu và hỗ trợ chuyển đổi sang dịch vụ.
 - Tư duy nội dung: chia sẻ kiến thức -> tạo niềm tin -> dẫn về dịch vụ -> hỗ trợ bán hàng.
+- Mọi nội dung mới nên được xây dựng song ngữ Việt - Anh, với thuật ngữ chuyên ngành được dùng chính xác và nhất quán ở cả hai ngôn ngữ.
 
 ## Nguyên tắc chất lượng
 
