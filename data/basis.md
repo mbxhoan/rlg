@@ -6,6 +6,14 @@ Tất cả nội dung ghi nhớ, dữ liệu đầu vào, thuật ngữ học đ
 
 Kho bài viết Facebook cũ được đồng bộ lên Supabase và là nguồn tham chiếu chính trong bảng `facebook_posts`. Không còn mặc định đọc từ `data/posts` cho nội dung lịch sử.
 
+Từ dữ liệu thật đã đọc được, cấu trúc bài viết đang dùng trong `facebook_posts` thường có:
+
+- Phần tiếng Việt trước, phần tiếng Anh sau.
+- Một dòng phân tách giữa hai ngôn ngữ như `--------` hoặc `------`.
+- Block cuối gồm địa chỉ, website, số điện thoại và hashtag.
+- Trường `images` lưu danh sách ảnh đính kèm theo thứ tự.
+- Trường `created_at` là mốc thời gian nhập bài lên hệ thống.
+
 ## 1. RLG Việt Nam là ai?
 
 - Reverse Logistics Group Vietnam (RLG Việt Nam) là đơn vị hoạt động trong lĩnh vực thu gom, tái chế và quản lý trách nhiệm tái chế (EPR) tại Việt Nam.
@@ -100,10 +108,10 @@ Kho bài viết Facebook cũ được đồng bộ lên Supabase và là nguồn
 - Nếu chưa đủ dữ liệu, hãy ghi rõ phần cần xác minh thay vì suy đoán.
 - Ưu tiên nguồn:
   - Văn bản pháp luật.
-  - Bảng `facebook_posts` trên Supabase cho dữ liệu bài viết cũ và giọng văn đã duyệt.
-  - Website hoặc tài liệu chính thức của RLG.
-  - Thông cáo, bài đăng hoặc nội dung đã duyệt của thương hiệu.
-  - Nguồn báo chí hoặc tài liệu chuyên ngành có độ tin cậy cao.
+- Bảng `facebook_posts` trên Supabase cho dữ liệu bài viết cũ và giọng văn đã duyệt.
+- Website hoặc tài liệu chính thức của RLG.
+- Thông cáo, bài đăng hoặc nội dung đã duyệt của thương hiệu.
+- Nguồn báo chí hoặc tài liệu chuyên ngành có độ tin cậy cao.
 
 ## 9. Gợi ý thông điệp cho các nhóm nội dung
 

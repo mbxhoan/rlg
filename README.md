@@ -33,6 +33,29 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 - Tư duy nội dung: chia sẻ kiến thức -> tạo niềm tin -> dẫn về dịch vụ -> hỗ trợ bán hàng.
 - Mọi nội dung mới nên được xây dựng song ngữ Việt - Anh, với thuật ngữ chuyên ngành được dùng chính xác và nhất quán ở cả hai ngôn ngữ.
 
+## Cấu trúc bài viết quan sát được
+
+- Bài viết cũ trong `facebook_posts` thường có phần tiếng Việt trước, sau đó là phần tiếng Anh.
+- Hai ngôn ngữ thường được ngăn bằng một dòng phân tách như `--------` hoặc `------`.
+- Cuối bài thường có block thông tin liên hệ gồm địa chỉ, website, số điện thoại và hashtag.
+- Nội dung trong `content` có thể chứa:
+  - Tiêu đề hoặc hook ở đầu bài.
+  - Đoạn mô tả dài ngắn linh hoạt.
+  - Bullet list hoặc dòng xuống hàng để làm rõ ý.
+  - CTA nhẹ nhàng dẫn về website hoặc dịch vụ.
+- Trường `images` thường lưu theo thứ tự đính kèm, có thể gồm tên file nội bộ và URL ảnh CDN.
+
+## Cấu trúc dữ liệu quan sát được
+
+| Cột | Diễn giải quan sát được |
+| --- | --- |
+| `post_id` | Mã bài viết |
+| `date` | Trường ngày hiển thị; nhiều bản ghi đang để trống |
+| `content` | Nội dung bài viết song ngữ Việt - Anh |
+| `post_url` | Đường dẫn bài đăng; nhiều bản ghi đang để trống |
+| `images` | Danh sách ảnh đính kèm theo thứ tự |
+| `created_at` | Thời điểm bài được nhập lên hệ thống |
+
 ## Nguyên tắc chất lượng
 
 - Nội dung phải đúng sự thật, tránh phóng đại hoặc khẳng định khi chưa có nguồn rõ ràng.

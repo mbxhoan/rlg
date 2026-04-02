@@ -39,6 +39,11 @@ Nguồn ưu tiên để học giọng văn và nội dung lịch sử là bảng
   - Học cấu trúc hook, body, CTA và hashtag.
   - Học cách dùng thuật ngữ Việt - Anh đã duyệt.
 - Nếu MCP hoặc Supabase không truy cập được, báo rõ tình trạng thay vì tự suy đoán hoặc quay lại dùng `data/posts` như nguồn mặc định.
+- Mẫu format quan sát được từ dữ liệu thật:
+  - Tiếng Việt trước, tiếng Anh sau.
+  - Có dòng phân tách giữa hai ngôn ngữ.
+  - Cuối bài có block liên hệ, website và hashtag.
+  - `images` là danh sách ảnh đính kèm theo thứ tự.
 
 ## 4. Mục tiêu nội dung
 
@@ -54,6 +59,7 @@ Nguồn ưu tiên để học giọng văn và nội dung lịch sử là bảng
 
 - Viết bằng tiếng Việt rõ ràng, mạch lạc, đúng ngữ cảnh doanh nghiệp.
 - Mỗi bài viết phải có phiên bản song ngữ Việt - Anh, trình bày rõ ràng và tương ứng về ý.
+- Nếu viết nội dung Facebook mới, hãy giữ đúng cấu trúc đang thấy trong `facebook_posts`: hook -> nội dung Việt -> phân tách -> nội dung Anh -> block liên hệ -> hashtag.
 - Nội dung phải hữu ích, không lan man, không rỗng nghĩa.
 - Luôn ưu tiên tính giáo dục, tính ứng dụng và tính chính xác.
 - Khi đề cập đến luật, nghị định hoặc trách nhiệm pháp lý, phải trích nguồn rõ ràng và đối chiếu văn bản hiện hành.
