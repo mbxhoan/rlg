@@ -12,7 +12,6 @@ if (!serviceRoleKey) {
 }
 
 export const FACEBOOK_POSTS_WORKSPACE_TABLE = 'facebook_posts_workspace';
-export const RLG_GLOBAL_PAGES_TABLE = 'rlg_global_pages';
 
 export const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {
   auth: {
