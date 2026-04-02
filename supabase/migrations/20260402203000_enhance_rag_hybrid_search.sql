@@ -25,9 +25,31 @@ create index if not exists rag_documents_fts_idx
 create index if not exists rag_chunks_fts_idx
   on public.rag_chunks using gin (fts);
 
-create index if not exists rag_chunks_embedding_idx
-  on public.rag_chunks using hnsw (embedding vector_cosine_ops)
-  where embedding is not null;
+do $$
+begin
+  if exists (
+    select 1
+    from pg_opclass oc
+    join pg_am am on am.oid = oc.opcmethod
+    join pg_type t on t.oid = oc.opcintype
+    where am.amname = 'hnsw'
+      and oc.opcname = 'vector_cosine_ops'
+      and t.typname = 'vector'
+  ) then
+    execute $sql$
+      create index if not exists rag_chunks_embedding_idx
+        on public.rag_chunks using hnsw (embedding vector_cosine_ops)
+        where embedding is not null
+    $sql$;
+  else
+    execute $sql$
+      create index if not exists rag_chunks_embedding_idx
+        on public.rag_chunks using ivfflat (embedding vector_cosine_ops)
+        with (lists = 100)
+        where embedding is not null
+    $sql$;
+  end if;
+end $$;
 
 create or replace function public.search_rag_chunks_hybrid(
   query_text text,
