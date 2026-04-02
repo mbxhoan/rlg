@@ -8,6 +8,29 @@ type PostsResponse = {
   posts: WorkspacePost[];
 };
 
+type KnowledgeSearchResult = {
+  document_id: string;
+  chunk_id: string;
+  source_table: 'facebook_posts' | 'web_pages';
+  source_id: string;
+  source_url: string | null;
+  title: string;
+  locale: string;
+  content_type: string;
+  chunk_index: number;
+  token_count: number;
+  chunk_text: string;
+  rank: number;
+};
+
+type KnowledgeContextPack = {
+  query: string;
+  limit: number;
+  source_tables: Array<'facebook_posts' | 'web_pages'>;
+  context_text: string;
+  chunks: KnowledgeSearchResult[];
+};
+
 const emptyForm: WorkspacePostForm = {
   title: '',
   content: '',
@@ -57,6 +80,9 @@ export function PostWorkspace() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [knowledgeLoading, setKnowledgeLoading] = useState(false);
+  const [knowledgePack, setKnowledgePack] = useState<KnowledgeContextPack | null>(null);
+  const [knowledgeError, setKnowledgeError] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | PostStatus>('all');
   const [message, setMessage] = useState<string | null>(null);
@@ -85,6 +111,21 @@ export function PostWorkspace() {
       setForm(emptyForm);
     }
   }, [selectedPost, selectedId]);
+
+  useEffect(() => {
+    const queryText = knowledgeQueryFromForm();
+    if (queryText.length < 12) {
+      setKnowledgePack(null);
+      setKnowledgeError(null);
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      void loadKnowledgeContext(queryText);
+    }, 650);
+
+    return () => window.clearTimeout(timer);
+  }, [form.title, form.content]);
 
   async function loadPosts() {
     setLoading(true);
@@ -306,6 +347,42 @@ export function PostWorkspace() {
     router.refresh();
   }
 
+  function knowledgeQueryFromForm() {
+    return (form.title.trim() || firstLine(form.content) || form.content.trim().slice(0, 180)).trim();
+  }
+
+  async function loadKnowledgeContext(forQuery?: string) {
+    const queryText = (forQuery ?? knowledgeQueryFromForm()).trim();
+    if (queryText.length < 12) {
+      setKnowledgePack(null);
+      setKnowledgeError(null);
+      return;
+    }
+
+    setKnowledgeLoading(true);
+    setKnowledgeError(null);
+
+    try {
+      const params = new URLSearchParams();
+      params.set('q', queryText);
+      params.set('limit', '3');
+      params.set('sources', 'facebook_posts,web_pages');
+
+      const response = await fetch(`/api/knowledge/context?${params.toString()}`);
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(payload?.error ?? 'Không thể lấy context cho bài viết.');
+      }
+
+      const payload = (await response.json()) as { pack?: KnowledgeContextPack };
+      setKnowledgePack(payload.pack ?? null);
+    } catch (error) {
+      setKnowledgeError(error instanceof Error ? error.message : 'Không thể lấy knowledge context.');
+    } finally {
+      setKnowledgeLoading(false);
+    }
+  }
+
   return (
     <div className="page-shell">
       <div className="container">
@@ -497,6 +574,65 @@ export function PostWorkspace() {
                   Chưa chọn bài nào. Tạo bài mới hoặc bấm vào một item bên trái để mở.
                 </div>
               )}
+
+              <div className="card" style={{ padding: 16, background: 'rgba(255,255,255,0.02)' }}>
+                <div className="workspace-header" style={{ marginBottom: 12 }}>
+                  <div>
+                    <h3 className="panel-title" style={{ marginBottom: 4 }}>
+                      Knowledge Assist
+                    </h3>
+                    <p>
+                      Tự lấy context từ <code>facebook_posts</code> + <code>web_pages</code> theo title/content đang soạn.
+                    </p>
+                  </div>
+
+                  <button className="button" type="button" onClick={() => void loadKnowledgeContext()}>
+                    {knowledgeLoading ? 'Đang lấy context...' : 'Refresh context'}
+                  </button>
+                </div>
+
+                {knowledgeError ? (
+                  <p className="footer-note" style={{ color: 'var(--danger)' }}>
+                    {knowledgeError}
+                  </p>
+                ) : null}
+
+                {knowledgePack ? (
+                  <>
+                    <div className="meta-row" style={{ marginTop: 0 }}>
+                      <span className="badge">Query: {knowledgePack.query}</span>
+                      <span className="badge">Chunks: {knowledgePack.chunks.length}</span>
+                      <span className="badge">{knowledgePack.source_tables.join(' + ')}</span>
+                    </div>
+                    <pre
+                      className="textarea"
+                      style={{
+                        marginTop: 12,
+                        minHeight: 180,
+                        whiteSpace: 'pre-wrap',
+                        overflow: 'auto',
+                        fontSize: 13,
+                      }}
+                    >
+                      {knowledgePack.context_text}
+                    </pre>
+                    <button
+                      className="button"
+                      type="button"
+                      onClick={async () => {
+                        if (!knowledgePack.context_text) return;
+                        await navigator.clipboard.writeText(knowledgePack.context_text);
+                        setMessage('Đã copy knowledge assist context.');
+                      }}
+                      disabled={!knowledgePack.context_text}
+                    >
+                      Copy context pack
+                    </button>
+                  </>
+                ) : (
+                  <div className="empty-state">Gõ title hoặc content để app tự lấy context hỗ trợ.</div>
+                )}
+              </div>
             </div>
 
             {message ? <p className="footer-note" style={{ color: 'var(--success)' }}>{message}</p> : null}

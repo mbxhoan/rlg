@@ -20,7 +20,6 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 | `Supabase.rag_documents` / `Supabase.rag_chunks` | Lớp chunk/index phục vụ RAG, được rebuild từ `facebook_posts` + `web_pages` |
 
 ## Cách sử dụng
-`
 1. Đọc `data/basis.md` để nắm bối cảnh, thuật ngữ và các mảng nội dung ưu tiên.
 2. Lấy dữ liệu bài viết cũ từ bảng `facebook_posts` trên Supabase để học giọng văn, độ dài, cấu trúc và cách triển khai bài.
 3. Lấy nội dung web từ bảng `web_pages` trên Supabase để học thông điệp global, cấu trúc thông tin và thuật ngữ chuẩn.
@@ -46,6 +45,8 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 - Repo có panel `Knowledge Index` để rebuild chunks từ `facebook_posts` + `web_pages` và test retrieval.
 - Repo có endpoint `GET /api/knowledge/context` để tạo context pack top chunk cho AI dùng trực tiếp.
 - Panel `Knowledge Index` cho phép lọc nguồn, search chunk và copy context pack.
+- Màn hình soạn bài có `Knowledge Assist` để bám context theo title/content hiện tại.
+- Có cron job Vercel để rebuild index tự động theo lịch hằng ngày.
 - Chunking mặc định trong index:
   - `facebook_posts`: khoảng 280 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên hook + body + CTA.
   - `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên đoạn theo heading và paragraph.
@@ -57,6 +58,7 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `APP_ACCESS_PASSWORD`
 - `APP_SESSION_SECRET`
+- `KNOWLEDGE_REBUILD_CRON` không bắt buộc; cron job dùng header `x-vercel-cron` khi chạy trên Vercel.
 
 ## Định hướng nội dung
 

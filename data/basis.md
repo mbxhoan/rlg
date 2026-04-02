@@ -118,6 +118,8 @@ Quy tắc bắt buộc cho bài mới:
 - Bảng `web_pages` trên Supabase cho nội dung web toàn cầu đã crawl sẵn.
 - Bảng `rag_documents` và `rag_chunks` để phục vụ retrieval, chunking và context injection.
 - Endpoint `GET /api/knowledge/context` để xuất context pack top chunk cho AI.
+- Cron job `GET /api/knowledge/rebuild/cron` để tự rebuild index hằng ngày trên Vercel.
+- `Knowledge Assist` trong màn hình soạn bài để bám context theo title/content hiện tại.
 - Website hoặc tài liệu chính thức của RLG.
 
 Chiến lược chunking cho RAG:
@@ -126,6 +128,7 @@ Chiến lược chunking cho RAG:
 - `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên heading, paragraph và mục liệt kê.
 - Nếu có thể, không tách rời separator song ngữ, CTA hoặc block liên hệ khỏi chunk gốc.
 - Khi cần prompt pack ngắn cho AI, dùng context pack top 3 chunk từ `rag_chunks` thay vì nạp toàn bộ tài liệu.
+- Khi soạn bài mới, tận dụng `Knowledge Assist` để so sánh nội dung hiện tại với nguồn lịch sử và web knowledge.
 - Thông cáo, bài đăng hoặc nội dung đã duyệt của thương hiệu.
 - Nguồn báo chí hoặc tài liệu chuyên ngành có độ tin cậy cao.
 
