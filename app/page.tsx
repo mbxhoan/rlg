@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { KnowledgePanel } from '@/components/knowledge-panel';
 import { PostWorkspace } from '@/components/post-workspace';
 import { getSessionTokenFromCookies, isSessionTokenValid } from '@/lib/session';
 
@@ -12,6 +13,7 @@ export default async function HomePage() {
   return (
     <>
       <PostWorkspace />
+      <KnowledgePanel />
     </>
   );
 }

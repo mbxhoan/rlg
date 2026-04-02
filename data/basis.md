@@ -4,7 +4,7 @@ Tài liệu này dùng làm “single source of truth” khi viết nội dung v
 
 Tất cả nội dung ghi nhớ, dữ liệu đầu vào, thuật ngữ học được và nội dung đầu ra đều phải được xử lý theo hướng song ngữ Việt - Anh, với ưu tiên cao nhất là tính chính xác của thuật ngữ chuyên ngành ở cả hai ngôn ngữ.
 
-Kho bài viết Facebook cũ được đồng bộ lên Supabase và là nguồn tham chiếu chính trong bảng `facebook_posts`. Nội dung mới, bản nháp, bản chỉnh sửa và trạng thái đã đăng phải đi qua bảng `facebook_posts_workspace`. Nội dung web toàn cầu đã crawl sẵn được lưu trong bảng `web_pages` trên Supabase và là nguồn học bổ sung cho thông điệp, sản phẩm và thuật ngữ tiếng Anh chuẩn. Repo này không tự crawl web nữa. Không còn mặc định đọc từ `data/posts` cho nội dung lịch sử.
+Kho bài viết Facebook cũ được đồng bộ lên Supabase và là nguồn tham chiếu chính trong bảng `facebook_posts`. Nội dung mới, bản nháp, bản chỉnh sửa và trạng thái đã đăng phải đi qua bảng `facebook_posts_workspace`. Nội dung web toàn cầu đã crawl sẵn được lưu trong bảng `web_pages` trên Supabase và là nguồn học bổ sung cho thông điệp, sản phẩm và thuật ngữ tiếng Anh chuẩn. Lớp RAG của repo rebuild chunk từ `facebook_posts` + `web_pages` vào `rag_documents` và `rag_chunks`. Repo này không tự crawl web nữa. Không còn mặc định đọc từ `data/posts` cho nội dung lịch sử.
 
 Từ dữ liệu thật đã đọc được, cấu trúc bài viết đang dùng trong `facebook_posts` thường có:
 
@@ -116,7 +116,14 @@ Quy tắc bắt buộc cho bài mới:
   - Văn bản pháp luật.
 - Bảng `facebook_posts` trên Supabase cho dữ liệu bài viết cũ và giọng văn đã duyệt.
 - Bảng `web_pages` trên Supabase cho nội dung web toàn cầu đã crawl sẵn.
+- Bảng `rag_documents` và `rag_chunks` để phục vụ retrieval, chunking và context injection.
 - Website hoặc tài liệu chính thức của RLG.
+
+Chiến lược chunking cho RAG:
+
+- `facebook_posts`: khoảng 280 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên cấu trúc hook -> nội dung Việt -> phân tách -> nội dung Anh -> block liên hệ.
+- `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên heading, paragraph và mục liệt kê.
+- Nếu có thể, không tách rời separator song ngữ, CTA hoặc block liên hệ khỏi chunk gốc.
 - Thông cáo, bài đăng hoặc nội dung đã duyệt của thương hiệu.
 - Nguồn báo chí hoặc tài liệu chuyên ngành có độ tin cậy cao.
 

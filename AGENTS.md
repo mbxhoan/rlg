@@ -9,6 +9,12 @@ Nguồn ưu tiên để học giọng văn và nội dung lịch sử là bảng
 Nguồn thứ hai để học hệ thống thương hiệu, sản phẩm, thị trường và thông điệp global là bảng `web_pages` trên Supabase, được nạp sẵn từ dữ liệu web RLG toàn cầu đã crawl bên ngoài repo.
 Repo này không tự crawl web nữa. Nếu dữ liệu web cần cập nhật, phải được đồng bộ vào `web_pages` ở phía Supabase hoặc pipeline bên ngoài.
 
+Lớp RAG trong repo dùng bảng `rag_documents` và `rag_chunks` để chunk hóa lại `facebook_posts` + `web_pages` thành index phục vụ retrieval. Khi cần context cho AI, ưu tiên lấy từ chunk index thay vì nạp trực tiếp toàn bộ raw rows.
+Chunking mặc định:
+- `facebook_posts`: khoảng 280 từ/chunk, overlap khoảng 80 từ, giữ nguyên hook/body/CTA nếu có thể.
+- `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên cắt theo heading và paragraph.
+- Không cắt rời dòng phân tách song ngữ hoặc block liên hệ nếu tránh được.
+
 ## 0. Working Protocol (Cách agent làm việc)
 Khi nhận yêu cầu:
 1) Tóm tắt mục tiêu + phạm vi (DB / UI / contract)
@@ -57,6 +63,7 @@ Khi nhận yêu cầu:
   - Mô tả sản phẩm và giải pháp.
   - Cách diễn đạt thương hiệu chuẩn theo RLG toàn cầu.
   - Từ khóa tiếng Anh chuyên ngành đã dùng chính thức trên web global.
+- Dùng bảng `rag_chunks` để lấy context đã chunk hóa cho retrieval khi generate bài hoặc phân loại nội dung.
 - Nếu MCP hoặc Supabase không truy cập được, báo rõ tình trạng thay vì tự suy đoán hoặc quay lại dùng `data/posts` như nguồn mặc định.
 - Mẫu format quan sát được từ dữ liệu thật:
   - Tiếng Việt trước, tiếng Anh sau.
@@ -155,6 +162,7 @@ Khi nhận yêu cầu:
 - Học từ các bài có sẵn trong thư mục `data/` trước khi viết bài mới.
 - Khi có truy cập Supabase, ưu tiên học từ bảng `facebook_posts` thay vì nguồn file tĩnh.
 - Khi cần giọng văn global hoặc thông điệp thương hiệu quốc tế, học thêm từ `web_pages`.
+- Khi cần context ngắn và sát prompt, học thêm từ `rag_chunks`.
 - Giữ giọng văn thống nhất giữa các bài.
 - Khi có nhiều cách diễn đạt, chọn cách dễ hiểu và phù hợp với doanh nghiệp hơn là cách quá học thuật.
 - Khi cần, đề xuất cấu trúc bài, dàn ý, hook, CTA và hashtag rõ ràng để tiết kiệm thời gian chỉnh sửa.

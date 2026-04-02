@@ -17,14 +17,16 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 | `Supabase.facebook_posts` | Kho dữ liệu bài viết Facebook cũ đã đồng bộ, dùng làm nguồn tham chiếu chính |
 | `Supabase.facebook_posts_workspace` | Bảng workspace để lưu, sửa, xoá và đánh dấu các bài viết mới |
 | `Supabase.web_pages` | Kho nội dung web đã được crawl và đồng bộ sẵn, dùng làm nguồn knowledge retrieval bổ sung |
+| `Supabase.rag_documents` / `Supabase.rag_chunks` | Lớp chunk/index phục vụ RAG, được rebuild từ `facebook_posts` + `web_pages` |
 
 ## Cách sử dụng
-
+`
 1. Đọc `data/basis.md` để nắm bối cảnh, thuật ngữ và các mảng nội dung ưu tiên.
 2. Lấy dữ liệu bài viết cũ từ bảng `facebook_posts` trên Supabase để học giọng văn, độ dài, cấu trúc và cách triển khai bài.
 3. Lấy nội dung web từ bảng `web_pages` trên Supabase để học thông điệp global, cấu trúc thông tin và thuật ngữ chuẩn.
 4. Tham chiếu `AGENTS.md` trước khi viết nội dung mới để đảm bảo đúng quy tắc.
-5. Khi tạo bài mới, ưu tiên:
+5. Lấy chunk đã index từ `rag_documents` / `rag_chunks` khi cần RAG context cho AI.
+6. Khi tạo bài mới, ưu tiên:
    - Giá trị giáo dục trước, bán hàng sau.
    - Câu chữ rõ ràng, dễ hiểu cho doanh nghiệp.
    - Có nguồn, trích dẫn và hashtag phù hợp.
@@ -41,6 +43,11 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 - Kho nội dung web đã được crawler bên ngoài xử lý và đồng bộ vào bảng `web_pages` để agent học thêm thông điệp global, mô tả sản phẩm và thuật ngữ tiếng Anh chuẩn.
 - Nội dung từ `web_pages` là nguồn tham chiếu bổ sung, không thay thế bài Facebook cũ.
 - Repo này không còn tự triển khai crawl web; dữ liệu web được nạp sẵn qua Supabase.
+- Repo có panel `Knowledge Index` để rebuild chunks từ `facebook_posts` + `web_pages` và test retrieval.
+- Chunking mặc định trong index:
+  - `facebook_posts`: khoảng 280 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên hook + body + CTA.
+  - `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên đoạn theo heading và paragraph.
+  - Bilingual separators và block liên hệ nên được giữ trọn trong cùng chunk nếu còn vừa ngưỡng.
 
 ## Biến môi trường cần có
 
