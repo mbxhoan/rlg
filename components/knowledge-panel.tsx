@@ -26,12 +26,25 @@ type RebuildSummary = {
   source_breakdown: Record<'facebook_posts' | 'web_pages', { scanned: number; upserted: number; skipped: number }>;
 };
 
+type KnowledgeContextPack = {
+  query: string;
+  limit: number;
+  source_tables: Array<'facebook_posts' | 'web_pages'>;
+  context_text: string;
+  chunks: KnowledgeSearchResult[];
+};
+
 export function KnowledgePanel() {
   const [query, setQuery] = useState('EPR');
   const [limit, setLimit] = useState('5');
+  const [contextLimit, setContextLimit] = useState('3');
+  const [includeFacebook, setIncludeFacebook] = useState(true);
+  const [includeWebPages, setIncludeWebPages] = useState(true);
   const [results, setResults] = useState<KnowledgeSearchResult[]>([]);
+  const [contextPack, setContextPack] = useState<KnowledgeContextPack | null>(null);
   const [summary, setSummary] = useState<RebuildSummary | null>(null);
   const [loading, setLoading] = useState(false);
+  const [contextLoading, setContextLoading] = useState(false);
   const [rebuilding, setRebuilding] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -49,6 +62,10 @@ export function KnowledgePanel() {
       const params = new URLSearchParams();
       params.set('q', query.trim());
       params.set('limit', limit || '5');
+      const sources = getSelectedSources();
+      if (sources.length > 0) {
+        params.set('sources', sources.join(','));
+      }
 
       const response = await fetch(`/api/knowledge/search?${params.toString()}`);
       if (!response.ok) {
@@ -63,6 +80,36 @@ export function KnowledgePanel() {
       setError(error instanceof Error ? error.message : 'Không thể tìm knowledge.');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function buildContext() {
+    setContextLoading(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const params = new URLSearchParams();
+      params.set('q', query.trim());
+      params.set('limit', contextLimit || '3');
+      const sources = getSelectedSources();
+      if (sources.length > 0) {
+        params.set('sources', sources.join(','));
+      }
+
+      const response = await fetch(`/api/knowledge/context?${params.toString()}`);
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(payload?.error ?? 'Không thể build context.');
+      }
+
+      const payload = (await response.json()) as { pack?: KnowledgeContextPack };
+      setContextPack(payload.pack ?? null);
+      setMessage(`Đã build context pack ${payload.pack?.chunks.length ?? 0} chunk.`);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Không thể build context.');
+    } finally {
+      setContextLoading(false);
     }
   }
 
@@ -82,6 +129,7 @@ export function KnowledgePanel() {
       setSummary(payload.summary ?? null);
       setMessage('Đã rebuild knowledge index.');
       await runSearch();
+      await buildContext();
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Không thể rebuild index.');
     } finally {
@@ -108,6 +156,9 @@ export function KnowledgePanel() {
           <button className="button" type="button" onClick={runSearch} disabled={loading}>
             {loading ? 'Đang search...' : 'Search'}
           </button>
+          <button className="button" type="button" onClick={buildContext} disabled={contextLoading}>
+            {contextLoading ? 'Đang build...' : 'Build context'}
+          </button>
         </div>
       </div>
 
@@ -133,6 +184,38 @@ export function KnowledgePanel() {
             placeholder="5"
           />
         </div>
+        <div className="field">
+          <label htmlFor="context-limit">Context limit</label>
+          <input
+            id="context-limit"
+            className="input"
+            inputMode="numeric"
+            value={contextLimit}
+            onChange={(event) => setContextLimit(event.target.value)}
+            placeholder="3"
+          />
+        </div>
+        <div className="field">
+          <label>Sources</label>
+          <div className="meta-row" style={{ marginTop: 0 }}>
+            <label className="badge" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <input
+                type="checkbox"
+                checked={includeFacebook}
+                onChange={(event) => setIncludeFacebook(event.target.checked)}
+              />
+              facebook_posts
+            </label>
+            <label className="badge" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <input
+                type="checkbox"
+                checked={includeWebPages}
+                onChange={(event) => setIncludeWebPages(event.target.checked)}
+              />
+              web_pages
+            </label>
+          </div>
+        </div>
       </div>
 
       {message ? <p className="footer-note" style={{ color: 'var(--success)' }}>{message}</p> : null}
@@ -149,6 +232,45 @@ export function KnowledgePanel() {
           <p className="footer-note" style={{ marginTop: 10 }}>
             facebook_posts: {summary.source_breakdown.facebook_posts.upserted}/{summary.source_breakdown.facebook_posts.scanned} | web_pages: {summary.source_breakdown.web_pages.upserted}/{summary.source_breakdown.web_pages.scanned}
           </p>
+        </div>
+      ) : null}
+
+      {contextPack ? (
+        <div className="card" style={{ padding: 14, background: 'rgba(255,255,255,0.02)', marginTop: 14 }}>
+          <div className="workspace-header" style={{ alignItems: 'center' }}>
+            <div>
+              <h3 className="panel-title" style={{ marginBottom: 4 }}>
+                Context Pack
+              </h3>
+              <p>Top {contextPack.chunks.length} chunk cho query: <strong>{contextPack.query}</strong></p>
+            </div>
+            <button
+              className="button"
+              type="button"
+              onClick={async () => {
+                if (!contextPack.context_text) return;
+                await navigator.clipboard.writeText(contextPack.context_text);
+                setMessage('Đã copy context pack.');
+              }}
+              disabled={!contextPack.context_text}
+            >
+              Copy context
+            </button>
+          </div>
+
+          <div className="meta-row" style={{ marginTop: 0 }}>
+            <span className="badge">limit {contextPack.limit}</span>
+            {contextPack.source_tables.map((source) => (
+              <span key={source} className="badge">{source}</span>
+            ))}
+          </div>
+
+          <pre
+            className="textarea"
+            style={{ marginTop: 12, minHeight: 220, whiteSpace: 'pre-wrap', overflow: 'auto' }}
+          >
+            {contextPack.context_text || 'Không có chunk phù hợp.'}
+          </pre>
         </div>
       ) : null}
 
@@ -171,4 +293,11 @@ export function KnowledgePanel() {
       </div>
     </section>
   );
+
+  function getSelectedSources(): Array<'facebook_posts' | 'web_pages'> {
+    const sources: Array<'facebook_posts' | 'web_pages'> = [];
+    if (includeFacebook) sources.push('facebook_posts');
+    if (includeWebPages) sources.push('web_pages');
+    return sources;
+  }
 }

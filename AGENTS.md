@@ -14,6 +14,7 @@ Chunking mặc định:
 - `facebook_posts`: khoảng 280 từ/chunk, overlap khoảng 80 từ, giữ nguyên hook/body/CTA nếu có thể.
 - `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên cắt theo heading và paragraph.
 - Không cắt rời dòng phân tách song ngữ hoặc block liên hệ nếu tránh được.
+Khi cần context ngắn để đưa vào prompt, dùng `GET /api/knowledge/context` hoặc `rag_chunks` thay vì tự nối raw content.
 
 ## 0. Working Protocol (Cách agent làm việc)
 Khi nhận yêu cầu:
@@ -64,6 +65,7 @@ Khi nhận yêu cầu:
   - Cách diễn đạt thương hiệu chuẩn theo RLG toàn cầu.
   - Từ khóa tiếng Anh chuyên ngành đã dùng chính thức trên web global.
 - Dùng bảng `rag_chunks` để lấy context đã chunk hóa cho retrieval khi generate bài hoặc phân loại nội dung.
+- Dùng endpoint `context` để tạo prompt pack top 3 chunk cho AI.
 - Nếu MCP hoặc Supabase không truy cập được, báo rõ tình trạng thay vì tự suy đoán hoặc quay lại dùng `data/posts` như nguồn mặc định.
 - Mẫu format quan sát được từ dữ liệu thật:
   - Tiếng Việt trước, tiếng Anh sau.
@@ -163,6 +165,7 @@ Khi nhận yêu cầu:
 - Khi có truy cập Supabase, ưu tiên học từ bảng `facebook_posts` thay vì nguồn file tĩnh.
 - Khi cần giọng văn global hoặc thông điệp thương hiệu quốc tế, học thêm từ `web_pages`.
 - Khi cần context ngắn và sát prompt, học thêm từ `rag_chunks`.
+- Khi cần prompt pack trực tiếp, học thêm từ `GET /api/knowledge/context`.
 - Giữ giọng văn thống nhất giữa các bài.
 - Khi có nhiều cách diễn đạt, chọn cách dễ hiểu và phù hợp với doanh nghiệp hơn là cách quá học thuật.
 - Khi cần, đề xuất cấu trúc bài, dàn ý, hook, CTA và hashtag rõ ràng để tiết kiệm thời gian chỉnh sửa.

@@ -44,6 +44,8 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 - Nội dung từ `web_pages` là nguồn tham chiếu bổ sung, không thay thế bài Facebook cũ.
 - Repo này không còn tự triển khai crawl web; dữ liệu web được nạp sẵn qua Supabase.
 - Repo có panel `Knowledge Index` để rebuild chunks từ `facebook_posts` + `web_pages` và test retrieval.
+- Repo có endpoint `GET /api/knowledge/context` để tạo context pack top chunk cho AI dùng trực tiếp.
+- Panel `Knowledge Index` cho phép lọc nguồn, search chunk và copy context pack.
 - Chunking mặc định trong index:
   - `facebook_posts`: khoảng 280 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên hook + body + CTA.
   - `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên đoạn theo heading và paragraph.

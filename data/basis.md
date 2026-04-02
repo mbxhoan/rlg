@@ -117,6 +117,7 @@ Quy tắc bắt buộc cho bài mới:
 - Bảng `facebook_posts` trên Supabase cho dữ liệu bài viết cũ và giọng văn đã duyệt.
 - Bảng `web_pages` trên Supabase cho nội dung web toàn cầu đã crawl sẵn.
 - Bảng `rag_documents` và `rag_chunks` để phục vụ retrieval, chunking và context injection.
+- Endpoint `GET /api/knowledge/context` để xuất context pack top chunk cho AI.
 - Website hoặc tài liệu chính thức của RLG.
 
 Chiến lược chunking cho RAG:
@@ -124,6 +125,7 @@ Chiến lược chunking cho RAG:
 - `facebook_posts`: khoảng 280 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên cấu trúc hook -> nội dung Việt -> phân tách -> nội dung Anh -> block liên hệ.
 - `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên heading, paragraph và mục liệt kê.
 - Nếu có thể, không tách rời separator song ngữ, CTA hoặc block liên hệ khỏi chunk gốc.
+- Khi cần prompt pack ngắn cho AI, dùng context pack top 3 chunk từ `rag_chunks` thay vì nạp toàn bộ tài liệu.
 - Thông cáo, bài đăng hoặc nội dung đã duyệt của thương hiệu.
 - Nguồn báo chí hoặc tài liệu chuyên ngành có độ tin cậy cao.
 

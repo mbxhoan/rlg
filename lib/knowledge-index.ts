@@ -41,6 +41,14 @@ export type KnowledgeSearchResult = {
   rank: number;
 };
 
+export type KnowledgeContextPack = {
+  query: string;
+  limit: number;
+  source_tables: KnowledgeSourceTable[];
+  context_text: string;
+  chunks: KnowledgeSearchResult[];
+};
+
 export type KnowledgeRebuildSummary = {
   documents_scanned: number;
   documents_upserted: number;
@@ -179,6 +187,39 @@ export async function searchKnowledgeChunks(params: {
   }
 
   return (data ?? []) as KnowledgeSearchResult[];
+}
+
+export async function buildKnowledgeContext(params: {
+  query: string;
+  limit?: number;
+  sourceTables?: KnowledgeSourceTable[];
+}): Promise<KnowledgeContextPack> {
+  const chunks = await searchKnowledgeChunks({
+    query: params.query,
+    limit: params.limit ?? 3,
+    sourceTables: params.sourceTables,
+  });
+
+  const context_text = chunks.length
+    ? chunks
+        .map((chunk, index) => {
+          const sourceLabel = `${chunk.source_table}:${chunk.source_id}`;
+          const urlPart = chunk.source_url ? ` | ${chunk.source_url}` : '';
+          return [
+            `[#${index + 1}] ${chunk.title} (${sourceLabel})${urlPart}`,
+            chunk.chunk_text,
+          ].join('\n');
+        })
+        .join('\n\n---\n\n')
+    : '';
+
+  return {
+    query: params.query,
+    limit: params.limit ?? 3,
+    source_tables: params.sourceTables?.length ? params.sourceTables : SOURCE_TABLES,
+    context_text,
+    chunks,
+  };
 }
 
 export async function getKnowledgeIndexStats() {
