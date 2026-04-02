@@ -51,7 +51,7 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 - Màn hình soạn bài có `Knowledge Assist` để bám context theo title/content hiện tại và refresh context ngay trước khi lưu.
 - Có cron job Vercel để rebuild index tự động theo lịch hằng ngày.
 - Nếu có `OPENAI_API_KEY`, hệ thống tạo embeddings thật cho `rag_chunks` và dùng hybrid search giữa full-text + vector; nếu không có key thì tự fallback về keyword search.
-- Index vector sẽ ưu tiên HNSW khi pgvector support, và tự fallback sang IVFFlat nếu môi trường Supabase chưa hỗ trợ HNSW opclass tương ứng.
+- Index vector hiện dùng IVFFlat để bảo đảm migration chạy ổn định trên Supabase; nếu sau này môi trường hỗ trợ HNSW tương thích, có thể nâng cấp riêng.
 - Chunking mặc định trong index:
   - `facebook_posts`: khoảng 280 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên hook + body + CTA.
   - `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên đoạn theo heading và paragraph.
