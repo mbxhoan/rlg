@@ -129,6 +129,7 @@ Chiến lược chunking cho RAG:
 - Nếu có thể, không tách rời separator song ngữ, CTA hoặc block liên hệ khỏi chunk gốc.
 - Khi cần prompt pack ngắn cho AI, dùng context pack top 3 chunk từ `rag_chunks` thay vì nạp toàn bộ tài liệu.
 - Khi soạn bài mới, tận dụng `Knowledge Assist` để so sánh nội dung hiện tại với nguồn lịch sử và web knowledge.
+- Khi thay đổi quy trình hoặc nguồn nội dung, cập nhật thêm `docs/usage.md` và `docs/maintenance.md`.
 - Thông cáo, bài đăng hoặc nội dung đã duyệt của thương hiệu.
 - Nguồn báo chí hoặc tài liệu chuyên ngành có độ tin cậy cao.
 

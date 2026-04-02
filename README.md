@@ -14,6 +14,8 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
 | --- | --- |
 | `AGENTS.md` | Quy tắc vận hành cho trợ lý nội dung và cách phản hồi trong dự án |
 | `data/basis.md` | Tài liệu nền về RLG Việt Nam, mô hình hoạt động và các chủ đề cốt lõi |
+| `docs/usage.md` | Hướng dẫn dùng app và quy trình tạo nội dung mỗi ngày |
+| `docs/maintenance.md` | Quy trình giữ tài liệu luôn khớp với code và dữ liệu thật |
 | `Supabase.facebook_posts` | Kho dữ liệu bài viết Facebook cũ đã đồng bộ, dùng làm nguồn tham chiếu chính |
 | `Supabase.facebook_posts_workspace` | Bảng workspace để lưu, sửa, xoá và đánh dấu các bài viết mới |
 | `Supabase.web_pages` | Kho nội dung web đã được crawl và đồng bộ sẵn, dùng làm nguồn knowledge retrieval bổ sung |
@@ -29,6 +31,7 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
    - Giá trị giáo dục trước, bán hàng sau.
    - Câu chữ rõ ràng, dễ hiểu cho doanh nghiệp.
    - Có nguồn, trích dẫn và hashtag phù hợp.
+7. Nếu bạn mới bắt đầu dùng app, mở thêm [docs/usage.md](docs/usage.md).
 
 ## Ứng dụng nội bộ
 
@@ -51,6 +54,7 @@ Bộ tài liệu nền để xây dựng nội dung marketing, kiến thức và
   - `facebook_posts`: khoảng 280 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên hook + body + CTA.
   - `web_pages`: khoảng 520 từ/chunk, overlap khoảng 80 từ, ưu tiên giữ nguyên đoạn theo heading và paragraph.
   - Bilingual separators và block liên hệ nên được giữ trọn trong cùng chunk nếu còn vừa ngưỡng.
+- Hướng dẫn bảo trì tài liệu nằm ở [docs/maintenance.md](docs/maintenance.md).
 
 ## Biến môi trường cần có
 

@@ -170,6 +170,7 @@ Khi nhận yêu cầu:
 - Khi cần context ngắn và sát prompt, học thêm từ `rag_chunks`.
 - Khi cần prompt pack trực tiếp, học thêm từ `GET /api/knowledge/context`.
 - Khi cần context ngay trong workflow soạn bài, dùng `Knowledge Assist` trong `PostWorkspace`.
+- Khi repo thay đổi, cập nhật đồng thời `README.md`, `docs/usage.md`, `docs/maintenance.md` và `docs/commit_prompt_map.md` nếu thay đổi ảnh hưởng đến người dùng, workflow hoặc nguồn dữ liệu.
 - Giữ giọng văn thống nhất giữa các bài.
 - Khi có nhiều cách diễn đạt, chọn cách dễ hiểu và phù hợp với doanh nghiệp hơn là cách quá học thuật.
 - Khi cần, đề xuất cấu trúc bài, dàn ý, hook, CTA và hashtag rõ ràng để tiết kiệm thời gian chỉnh sửa.
